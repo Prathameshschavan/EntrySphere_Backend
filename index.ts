@@ -21,7 +21,7 @@ app.use("/auth", AuthRouter);
 app.use("/", Router);
 io.on("connection", (socket) => {});
 
-httpServer.listen(process.env.SERVER_PORT || 3000, () => {
+httpServer.listen(process.env.PORT || 3000, () => {
   connection();
   console.log("Server listening on port 3000");
 });
