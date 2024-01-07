@@ -21,7 +21,7 @@ app.use("/auth", AuthRouter);
 app.use("/", Router);
 // io.on("connection", (socket) => {});
 
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
   connection();
   console.log("Server listening on port 8000");
 });
