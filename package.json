@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node app.ts",
+    "start": "node_modules/.bin/ts-node app.ts",
     "dev": "nodemon --exec ts-node app.ts"
   },
   "author": "",
@@ -24,7 +24,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.5",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2"
   }
-} 
+}
