@@ -13,6 +13,7 @@ interface IUser {
 }
 
 export const register = async (req: any, res: any) => {
+  console.log("object")
   try {
     const isExist = await User.find({ email: req.body.email });
 
@@ -27,6 +28,7 @@ export const register = async (req: any, res: any) => {
       delete req.body.password;
       delete req.body.jti;
       delete req.body.sub;
+      delete req.body.method;
       return response(res, 200, {
         message: `User registered successfully`,
         user: req.body,
@@ -38,6 +40,7 @@ export const register = async (req: any, res: any) => {
       const hashedPassword = hashPassword(req.body.password);
       await User.create({ ...req.body, password: hashedPassword });
       delete req.body.password;
+      delete req.body.method;
       return response(res, 200, {
         message: "User registered successfully",
         user: { ...req.body },
@@ -49,6 +52,7 @@ export const register = async (req: any, res: any) => {
       await User.create({ ...req.body });
       delete req.body.jti;
       delete req.body.sub;
+      delete req.body.method;
       return response(res, 200, {
         message: "User registered successfully",
         user: req.body,
@@ -56,6 +60,7 @@ export const register = async (req: any, res: any) => {
       });
     }
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       response(res, 500, { message: error.message });
     } else {
@@ -74,6 +79,7 @@ export const login = async (req: any, res: any) => {
         message: `User with email '${req.body.email}' is not registered`,
       });
     }
+
 
     if (isExist.length === 0 && req.body?.method === "google") {
       const token = generateToken(req.body);
