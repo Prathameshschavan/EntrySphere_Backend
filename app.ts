@@ -7,6 +7,8 @@ import Cors from "cors"
 const app = express();
 import connection from "./src/config/database";
 import AuthRouter from "./src/routes/auth.route";
+import checkInRoute from "./src/routes/check-in.route";
+
 // const httpServer = createServer(app);
 // const io = new Server(httpServer, {
 //   /* options */
@@ -19,9 +21,10 @@ app.use(express.json());
 app.use(Cors());
 app.use("/auth", AuthRouter);
 app.use("/", Router);
+app.use("/check-in", checkInRoute);
 // io.on("connection", (socket) => {});
 
-app.listen(3000, () => {
+app.listen(8000, () => {
   connection();
   console.log("Server listening on port 8000");
 });
