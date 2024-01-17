@@ -7,7 +7,7 @@ const connection = async () => {
     if (!process.env.MONGO_URL) {
         throw new Error("MONGO_URL environment variable is not defined");
     }
-    try {
+    try { 
         await mongoose.connect(process.env.MONGO_URL)
         console.log("Database connection established")
     } catch (error) {

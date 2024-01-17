@@ -17,7 +17,6 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 const common_services_1 = require("../services/common.services");
 const jwt_services_1 = require("../services/jwt.services");
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("object");
     try {
         const isExist = yield user_model_1.default.find({ email: req.body.email });
         if (isExist.length > 0 && req.body.method === "email") {

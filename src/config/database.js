@@ -21,6 +21,7 @@ const connection = () => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error("MONGO_URL environment variable is not defined");
     }
     try {
+        console.log(process.env.MONGO_URL)
         yield mongoose_1.default.connect(process.env.MONGO_URL);
         console.log("Database connection established");
     }
