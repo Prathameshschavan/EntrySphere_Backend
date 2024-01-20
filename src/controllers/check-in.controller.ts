@@ -9,7 +9,6 @@ export const addCheckIn = async (req: any, res: any) => {
       check_out_time: "",
     };
     const newRecord = await CheckIn.create(checkInData);
-    console.log(newRecord);
     response(res, 200, { message: "Check In Successfull", data: newRecord });
   } catch (error) {
     console.log(error);
@@ -23,7 +22,14 @@ export const addCheckIn = async (req: any, res: any) => {
 
 export const getCheckIn = async (req: any, res: any) => {
   try {
-    const checkInData = await CheckIn.find({check_out_time: ""});
+    const {_id} = req?.query
+    let checkInData = null;
+    if(_id){
+      checkInData = await CheckIn.findOne({check_out_time: "", _id});
+    }
+    else{
+      checkInData = await CheckIn.find({check_out_time: ""});
+    }
     response(res, 200, {message: "Check In Fetched Successfully", data: checkInData})
   } catch (error) {
     console.log(error);

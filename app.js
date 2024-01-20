@@ -13,6 +13,7 @@ const app = (0, express_1.default)();
 const database_1 = __importDefault(require("./src/config/database"));
 const auth_route_1 = __importDefault(require("./src/routes/auth.route"));
 const check_in_route_1 = __importDefault(require("./src/routes/check-in.route"));
+const check_out_route_1 = __importDefault(require("./src/routes/check-out.route"));
 // const httpServer = createServer(app);
 // const io = new Server(httpServer, {
 //   /* options */
@@ -26,6 +27,7 @@ app.use((0, cors_1.default)());
 app.use("/auth", auth_route_1.default);
 app.use("/", Router);
 app.use("/check-in", check_in_route_1.default);
+app.use("/check-out", check_out_route_1.default);
 // io.on("connection", (socket) => {});
 app.listen(8000, () => {
     (0, database_1.default)();
