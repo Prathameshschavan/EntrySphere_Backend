@@ -16,9 +16,35 @@ exports.addCheckOut = exports.getCheckOut = void 0;
 const check_in_model_1 = __importDefault(require("../models/check-in.model"));
 const common_services_1 = require("../services/common.services");
 const getCheckOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const checkOutData = yield check_in_model_1.default.find({ check_out_time: { $ne: "" } });
-    console.log(checkOutData);
-    (0, common_services_1.response)(res, 200, checkOutData);
+    try {
+        const { _id } = req === null || req === void 0 ? void 0 : req.query;
+        let checkOutData;
+        if (_id) {
+            checkOutData = yield check_in_model_1.default.findOne({
+                _id,
+                check_out_time: { $ne: "" },
+            });
+            if (!checkOutData) {
+                (0, common_services_1.response)(res, 400, { message: "_id not found" });
+                return;
+            }
+            else {
+                (0, common_services_1.response)(res, 200, { message: "Checkout fetched successfully", data: [checkOutData] });
+                return;
+            }
+        }
+        checkOutData = yield check_in_model_1.default.find({ check_out_time: { $ne: "" } });
+        (0, common_services_1.response)(res, 200, { message: "Checkout fetched successfully", data: checkOutData });
+    }
+    catch (error) {
+        console.log(error);
+        if (error instanceof Error) {
+            (0, common_services_1.response)(res, 500, { message: error.message });
+        }
+        else {
+            (0, common_services_1.response)(res, 500, { message: "An unexpected error occurred." });
+        }
+    }
 });
 exports.getCheckOut = getCheckOut;
 const addCheckOut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,6 +57,10 @@ const addCheckOut = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const checkOutData = yield check_in_model_1.default.findOne({ _id });
         if (!checkOutData) {
             (0, common_services_1.response)(res, 400, { message: "_id not found" });
+            return;
+        }
+        if (checkOutData.check_out_time !== "") {
+            (0, common_services_1.response)(res, 400, { message: "This visitor is already checked out" });
             return;
         }
         const updatedData = yield check_in_model_1.default.findOneAndUpdate({ _id }, { $set: { check_out_time: new Date() } }, { new: true });

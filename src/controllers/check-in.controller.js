@@ -19,7 +19,6 @@ const addCheckIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const checkInData = Object.assign(Object.assign({}, req.body), { check_in_time: new Date(), check_out_time: "" });
         const newRecord = yield check_in_model_1.default.create(checkInData);
-        console.log(newRecord);
         (0, common_services_1.response)(res, 200, { message: "Check In Successfull", data: newRecord });
     }
     catch (error) {
@@ -36,7 +35,6 @@ exports.addCheckIn = addCheckIn;
 const getCheckIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { _id } = req === null || req === void 0 ? void 0 : req.query;
-        console.log(_id);
         let checkInData = null;
         if (_id) {
             checkInData = yield check_in_model_1.default.findOne({ check_out_time: "", _id });
