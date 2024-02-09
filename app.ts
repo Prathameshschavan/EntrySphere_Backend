@@ -9,6 +9,8 @@ import connection from "./src/config/database";
 import AuthRouter from "./src/routes/auth.route";
 import checkInRoute from "./src/routes/check-in.route";
 import checkOutRoute from "./src/routes/check-out.route";
+import dashboardRoute from "./src/routes/dashboard.route";
+
 // const httpServer = createServer(app);
 // const io = new Server(httpServer, {
 //   /* options */
@@ -22,7 +24,8 @@ app.use(Cors());
 app.use("/auth", AuthRouter);
 app.use("/", Router);
 app.use("/check-in", checkInRoute);
-app.use("/check-out", checkOutRoute)
+app.use("/check-out", checkOutRoute);
+app.use("/dashboard", dashboardRoute);
 // io.on("connection", (socket) => {});
 
 app.listen(8000, () => {

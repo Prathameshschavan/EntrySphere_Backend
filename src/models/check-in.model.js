@@ -49,6 +49,14 @@ const checkInSchema = new mongoose_1.default.Schema({
         type: String,
         require: false,
     },
+    dayIn: {
+        type: String,
+        require: false,
+    },
+    dayOut: {
+        type: String,
+        require: false,
+    },
     entry_by: {
         type: String,
         require: false,

@@ -17,7 +17,9 @@ const check_in_model_1 = __importDefault(require("../models/check-in.model"));
 const common_services_1 = require("../services/common.services");
 const addCheckIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const checkInData = Object.assign(Object.assign({}, req.body), { check_in_time: new Date(), check_out_time: "" });
+        const today = new Date();
+        const checkInData = Object.assign(Object.assign({}, req.body), { check_in_time: new Date(), check_out_time: "", dayIn: `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}`, dayOut: "" });
+        console.log(checkInData);
         const newRecord = yield check_in_model_1.default.create(checkInData);
         (0, common_services_1.response)(res, 200, { message: "Check In Successfull", data: newRecord });
     }
@@ -34,15 +36,40 @@ const addCheckIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.addCheckIn = addCheckIn;
 const getCheckIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { _id } = req === null || req === void 0 ? void 0 : req.query;
+        const { _id, startDate, endDate } = req === null || req === void 0 ? void 0 : req.query;
         let checkInData = null;
         if (_id) {
             checkInData = yield check_in_model_1.default.findOne({ check_out_time: "", _id });
+            if (!checkInData) {
+                (0, common_services_1.response)(res, 400, { message: "_id not found" });
+                return;
+            }
+        }
+        else if (startDate && endDate) {
+            // checkInData = await CheckIn.find({ createdAt: { $gt: new Date("2024-01-25"), $lt: new Date("2024-02-07") }, check_out_time: "" });
+            checkInData = yield check_in_model_1.default.find({
+                createdAt: { $gt: new Date(startDate), $lt: new Date(endDate) },
+                check_out_time: "",
+            });
+        }
+        else if (startDate == "true") {
+            const today = new Date();
+            checkInData = yield check_in_model_1.default.find({
+                createdAt: {
+                    $gt: new Date(today.setDate(today.getDate() - 1)),
+                    $lt: new Date(today.setDate(today.getDate() + 1)),
+                },
+                check_out_time: "",
+            });
         }
         else {
             checkInData = yield check_in_model_1.default.find({ check_out_time: "" });
         }
-        (0, common_services_1.response)(res, 200, { message: "Check In Fetched Successfully", data: checkInData });
+        console.log(checkInData);
+        (0, common_services_1.response)(res, 200, {
+            message: "Check In Fetched Successfully",
+            data: checkInData,
+        });
     }
     catch (error) {
         console.log(error);

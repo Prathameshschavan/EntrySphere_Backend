@@ -3,26 +3,42 @@ import { response } from "../services/common.services";
 
 export const getCheckOut = async (req: any, res: any) => {
   try {
-    const { _id } = req?.query;
+    const { _id, startDate, endDate } = req?.query;
     let checkOutData;
     if (_id) {
       checkOutData = await CheckIn.findOne({
         _id,
-        check_out_time: { $ne: "" },
+        check_out_time: { $ne: "" || undefined || null },
       });
 
       if (!checkOutData) {
         response(res, 400, { message: "_id not found" });
         return;
       }
-      else{
-        response(res, 200, {message: "Checkout fetched successfully",data :[checkOutData]});
-        return;
-      }
+    } else if (startDate && endDate) {
+      checkOutData = await CheckIn.find({
+        createdAt: { $gt: new Date(startDate), $lt: new Date(endDate) },
+        check_out_time: { $ne: "" || undefined || null },
+      });
+    } else if (startDate == "true") {
+      const today = new Date();
+      checkOutData = await CheckIn.find({
+        createdAt: {
+          $gt: new Date(today.setDate(today.getDate() - 1)),
+          $lt: new Date(today.setDate(today.getDate() + 1)),
+        },
+        check_out_time: { $ne: "" || undefined || null },
+      });
+    } else {
+      checkOutData = await CheckIn.find({
+        check_out_time: { $ne: "" || undefined || null },
+      });
     }
 
-    checkOutData = await CheckIn.find({ check_out_time: { $ne: "" } });
-    response(res, 200,  {message: "Checkout fetched successfully",data :checkOutData});
+    response(res, 200, {
+      message: "Checkout fetched successfully",
+      data: checkOutData,
+    });
   } catch (error) {
     console.log(error);
     if (error instanceof Error) {
@@ -51,9 +67,15 @@ export const addCheckOut = async (req: any, res: any) => {
       response(res, 400, { message: "This visitor is already checked out" });
       return;
     }
+    const today = new Date();
     const updatedData = await CheckIn.findOneAndUpdate(
       { _id },
-      { $set: { check_out_time: new Date() } },
+      {
+        $set: {
+          check_out_time: new Date(),
+          dayOut: `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}`,
+        },
+      },
       { new: true }
     );
     response(res, 200, updatedData);
